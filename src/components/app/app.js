@@ -24,10 +24,20 @@ export default class App extends Component {
       id: this.maxId++
     };
   };
+  stateItem = ( propName ) =>{
+    this.setState(({ todoData }) => {
+      const newArray = [...todoData];
+      const resultArray = newArray.filter((el) => el.done === propName)
+     
+      return{
+        todoData: resultArray
+      }
+    });
+  };
   deleteItem = (id) =>{
     this.setState(({todoData}) => {
       const idx = todoData.findIndex((el) => el.id === id);
-      console.log(idx);
+      //console.log(idx);
       const newArray = [
         ...todoData.slice(0, idx), 
         ...todoData.slice(idx+1)
@@ -35,7 +45,7 @@ export default class App extends Component {
       return{
         todoData: newArray
       }
-    })
+    });
   };
   addItem = (text) => {
     const newItem = this.createTodoItem(text);
@@ -83,7 +93,8 @@ export default class App extends Component {
         <AppHeader toDo={todoCount} done={doneCount} />
         <div className="top-panel d-flex">
           <SearchPanel />
-          <ItemStatusFilter />
+          <ItemStatusFilter 
+            stateItem = { this.stateItem } />
         </div>
   
         <TodoList 
