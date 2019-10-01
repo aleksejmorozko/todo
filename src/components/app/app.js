@@ -10,12 +10,14 @@ import './app.css';
 export default class App extends Component {
   maxId = 100;
   state = {
-    todoData: [
+     todoData:[
       this.createTodoItem('Drink Coffee'),
       this.createTodoItem('Make Awesome App'),
       this.createTodoItem('Have a lunch'),
-    ]
+    ],
+    dataToSee: []
   };
+  
   createTodoItem(label){
     return{
       label,
@@ -26,12 +28,12 @@ export default class App extends Component {
   };
   stateItem = ( propName ) =>{
     this.setState(({ todoData }) => {
-      const newArray = [...todoData];
-      const resultArray = newArray.filter((el) => el.done === propName)
-     
-      return{
-        todoData: resultArray
-      }
+      //console.log(dataToSee.length)
+      switch(propName){
+        case 'active': return { todoData: this.state.dataToSee.filter((el) => el.done === false)}
+        case 'done':  return { todoData:  this.state.dataToSee.filter((el) => el.done === true)}
+        default: return{ todoData:  this.state.dataToSee } 
+      };      
     });
   };
   deleteItem = (id) =>{
@@ -43,19 +45,21 @@ export default class App extends Component {
         ...todoData.slice(idx+1)
       ];
       return{
-        todoData: newArray
+        todoData: newArray, 
+        dataToSee: newArray
       }
     });
   };
   addItem = (text) => {
     const newItem = this.createTodoItem(text);
-    this.setState(({ todoData })=>{
+    this.setState(({ todoData, dataToSee })=>{
       const newArray = [
         ...todoData,
         newItem
       ];
       return {
-        todoData: newArray
+        todoData: newArray,
+        dataToSee: newArray
       };
     });
   };
@@ -70,24 +74,27 @@ export default class App extends Component {
       ];
   };
   onToggleImportant = (id) => {
-    this.setState(({ todoData }) => {
+    this.setState(({ todoData, dataToSee }) => {
       return{
-        todoData: this.toggleProperty(todoData, id, 'important')
+        todoData: this.toggleProperty(todoData, id, 'important'),
+        dataToSee: this.toggleProperty(todoData, id, 'important')
       }
     });
   };
   onToggleDone = (id) => {
-    this.setState(({ todoData }) => {
+    this.setState(({ todoData, dataToSee }) => {
       return{
-        todoData: this.toggleProperty(todoData, id, 'done')
+        todoData: this.toggleProperty(todoData, id, 'done'),
+        dataToSee: this.toggleProperty(todoData, id, 'done')
       }
     });
   };
   render(){
-    const { todoData } = this.state;
+   // {this.stateItem('all');}
+    const { todoData} = this.state;
     const doneCount = todoData.filter((el) => el.done).length;
     const todoCount = todoData.length - doneCount;
-
+    
     return (
       <div className="todo-app">
         <AppHeader toDo={todoCount} done={doneCount} />
