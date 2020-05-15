@@ -29,7 +29,7 @@ export default class ItemAddForm extends Component{
                     placeholder='whats new need to be done' 
                     value={this.state.label} />
                 <button 
-                    className='btn btn-outline-secondary'>
+                    className='btn btn-outline-success'>
                     Add Item
                 </button>
             </form>
